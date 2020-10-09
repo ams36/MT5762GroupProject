@@ -2,12 +2,9 @@
 # Objective : Decide what elements to further check and what models to consider
 # Created by: Group 9
 # Created on: 10/8/20
-
 #What relationships are there between the measured
 #variables and the birth weight of babies?
-
 library(tidyverse)
-
 #import dataset in
 babies <- read.table("babies23.data", header = TRUE)
 babies <- as.data.frame(babies)
@@ -72,7 +69,7 @@ analyseBabies$time <- as.factor(analyseBabies$time)
 analyseBabies$number <- as.factor(analyseBabies$number)
 
 factorOrNumeric <- sapply(analyseBabies, is.factor)
-
+dir.create("Initial_Eval")
 #data will be a bit skewed, but only using this to look for strong
 # correlation to choose a few factors to consider
 for (x in 1:(NCOL(analyseBabies) - 2)){
@@ -92,19 +89,23 @@ for (x in 1:(NCOL(analyseBabies) - 2)){
   print(paste0(variable, ": QUICK SUMMARY ANALYSIS"))
   print("summary")
   print(summary(twoCol[2]))
+  save <- paste0("InitialEval-", variable, ".png")
   if (factorOrNumeric[variable]){
     variableBoxPlot <- ggplot(data = twoCol, aes_string("wt", variable)) + geom_boxplot() + ggtitle(variable)
     print(variableBoxPlot)
     print("quick ANOVA")
     print(summary(aov(unlist(twoCol[,1])~ unlist(twoCol[,2]))))
+    ggsave(save, variableBoxPlot, png(), path = "Initial_Eval")
   } else {
     variableScatterPlot <- ggplot(data = twoCol, aes_string("wt", variable)) + geom_point() + geom_smooth(method = lm) + ggtitle(variable)
     print(variableScatterPlot)
     print("correlation test")
     print(cor.test(as.vector(twoCol[1][,]), as.vector(twoCol[2][,])))
+    ggsave(save, variableScatterPlot, png(), path = "Initial_Eval")
   }
   print("***********************")
   print("***********************")
+  dev.off()
 }
 
 remove(factorOrNumeric)
@@ -113,3 +114,4 @@ remove(variable)
 remove(variableBoxPlot)
 remove(variableScatterPlot)
 remove(x)
+remove(save)
