@@ -97,7 +97,7 @@ for (x in 1:(NCOL(analyseBabies) - 2)){
     print(summary(aov(unlist(twoCol[,1])~ unlist(twoCol[,2]))))
     ggsave(save, variableBoxPlot, png(), path = "Initial_Eval")
   } else {
-    variableScatterPlot <- ggplot(data = twoCol, aes_string("wt", variable)) + geom_point() + geom_smooth(method = lm) + ggtitle(variable)
+    variableScatterPlot <- ggplot(data = twoCol, aes_string("wt", variable)) + geom_point() + ggtitle(variable)
     print(variableScatterPlot)
     print("correlation test")
     print(cor.test(as.vector(twoCol[1][,]), as.vector(twoCol[2][,])))
